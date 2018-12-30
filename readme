@@ -26,9 +26,10 @@ https://docs.oracle.com/javase/7/docs/api/javax/swing/JFileChooser.html
 http://tutorials.jenkov.com/java-concurrency/creating-and-starting-threads.html
 https://developers.google.com/kml/documentation/time
 https://gis.stackexchange.com/questions/256779/changing-kml-markers-icons-in-google-earth-pro
+https://stackoverflow.com/questions/13516829/jfilechooser-change-default-directory-in-windows
 
 Version
-1.0
+1.0.1
 
 Authors
 Denis Shapira

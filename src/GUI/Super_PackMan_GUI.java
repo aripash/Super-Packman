@@ -12,7 +12,10 @@ import java.io.IOException;
 import java.util.*;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import Coords.MyCoords;
 import Game.Map;
 import Geom.Point3D;
@@ -38,7 +41,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 			e.printStackTrace();
 		}	
 		this.map=new Map(image);
-		
+
 		MenuBar menuBar = new MenuBar();
 		Menu menu1=new Menu("Game");
 		MenuItem item1a = new MenuItem("Load");
@@ -60,7 +63,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 		item1b.addActionListener(this);
 		item2a.addActionListener(this);
 		item2b.addActionListener(this);
-		
+
 		this.setMenuBar(menuBar);
 	}
 	public void paint(Graphics g){
@@ -104,6 +107,11 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 					g.fillOval(pix[0], pix[1], radius, radius);
 				}
 			}
+			String info=play.getStatistics();
+			g.setColor(Color.BLACK);
+			g.drawString(info, 101, 101);
+			g.setColor(Color.yellow);
+			g.drawString(info, 100, 100);
 		}
 	}
 	@Override
@@ -148,7 +156,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -160,12 +168,18 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getActionCommand().equalsIgnoreCase("Load")) {
-			play=new Play("data/Ex4_OOP_example5.csv");
-			play.setIDs(205356801,314291808,3333);
-			started=true;
-			repaint();
+			JFileChooser fc = new JFileChooser("data/");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("csv","CSV");
+			fc.setFileFilter(filter);
+			int value=fc.showOpenDialog(null);
+			if(value==fc.APPROVE_OPTION) {
+				File file=fc.getSelectedFile();
+				play=new Play(file.getPath());
+				play.setIDs(205356801,314291808,3333);
+				started=true;
+				repaint();
+			}
 		}
-
 		if(e.getActionCommand().equalsIgnoreCase("Add Player")) {
 			addMe=true;
 		}
