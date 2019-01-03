@@ -18,6 +18,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Coords.MyCoords;
 import Game.Map;
+import Game.Super_Packman_Algo;
 import Geom.Point3D;
 import Robot.Play;
 
@@ -34,6 +35,10 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 		this.addMouseListener(this); 
 
 	}
+	/**
+	 * reads the image and builds the menu bar for the game
+	 * @param imagePath path to the displayed image
+	 */
 	public void startimage(String imagePath) {	
 		try {
 			image = ImageIO.read(new File(imagePath));
@@ -75,27 +80,31 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 			for(int i=0;i<boardData.size();i++) {
 				String row=boardData.get(i);
 				String [] collum=row.split(",");
+				if(collum[0].equalsIgnoreCase("B")) {
+				double x1=Double.parseDouble(collum[3]);
+				double y1=Double.parseDouble(collum[2]);
+				double x2=Double.parseDouble(collum[6]);
+				double y2=Double.parseDouble(collum[5]);
+				Point3D point1=new Point3D(x1,y1,0);
+				Point3D point2=new Point3D(x2,y2,0);
+				int []pix1=map.convC2P(point1);
+				int []pix2=map.convC2P(point2);
+				int widthRec=Math.abs(pix1[0]-pix2[0]);
+				int heightRec=Math.abs(pix1[1]-pix2[1]);
+				g.setColor(Color.black);
+				g.fillRect(pix1[0], pix2[1], widthRec, heightRec);
+			}
+			}
+			for(int i=0;i<boardData.size();i++) {
+				String row=boardData.get(i);
+				String [] collum=row.split(",");
 				Color colour=Color.black;
 				int radius=0;
 				if(collum[0].equalsIgnoreCase("M")) {colour=Color.CYAN;radius=30;}
 				else if(collum[0].equalsIgnoreCase("P")) {colour=Color.YELLOW;radius=25;}
 				else if(collum[0].equalsIgnoreCase("G")) {colour=Color.RED;radius=20;}
 				else if(collum[0].equalsIgnoreCase("F")) {colour=Color.GREEN;radius=18;}
-				if(collum[0].equalsIgnoreCase("B")) {
-					double x1=Double.parseDouble(collum[3]);
-					double y1=Double.parseDouble(collum[2]);
-					double x2=Double.parseDouble(collum[6]);
-					double y2=Double.parseDouble(collum[5]);
-					Point3D point1=new Point3D(x1,y1,0);
-					Point3D point2=new Point3D(x2,y2,0);
-					int []pix1=map.convC2P(point1);
-					int []pix2=map.convC2P(point2);
-					int widthRec=Math.abs(pix1[0]-pix2[0]);
-					int heightRec=Math.abs(pix1[1]-pix2[1]);
-					g.setColor(Color.black);
-					g.fillRect(pix1[0], pix2[1], widthRec, heightRec);
-				}
-				else {
+				if(!collum[0].equalsIgnoreCase("B")) {
 					double x=Double.parseDouble(collum[3]);
 					double y=Double.parseDouble(collum[2]);
 					double z=Double.parseDouble(collum[4]);
@@ -183,12 +192,33 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 		if(e.getActionCommand().equalsIgnoreCase("Add Player")) {
 			addMe=true;
 		}
-		if(e.getActionCommand().equalsIgnoreCase("Manual")) {
+		if(e.getActionCommand().equalsIgnoreCase("Manual")) {//best 35.1
 			play.start();
 			addMe=false;
 		}
 		if(e.getActionCommand().equalsIgnoreCase("Auto")) {
 			addMe=false;
+			play.start();
+			
+			new Thread()
+			{
+				public void run()
+				{
+					
+					while(play.isRuning()) {
+						double angle=Super_Packman_Algo.recommandedRotation(play.getBoard());
+						play.rotate(angle);
+						repaint();
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						//run();
+					}
+				}
+			}.start();
 		}
 
 	}
