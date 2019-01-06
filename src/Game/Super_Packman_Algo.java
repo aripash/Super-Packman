@@ -7,6 +7,11 @@ import Coords.MyCoords;
 import Geom.Point3D;
 
 public class Super_Packman_Algo {
+	/**
+	 * calculates the best angle the player needs to rotate to.
+	 * @param data the current data on the board.
+	 * @return number that represents the angle that the player needs to move to.
+	 */
 	public static double recommandedRotation(ArrayList<String> data) {
 		double rotate;
 		ArrayList<Point3D> fruits=new ArrayList<Point3D>();
@@ -52,6 +57,12 @@ public class Super_Packman_Algo {
 		}
 		return rotate;
 	}
+	/**
+	 * returns the closest fruit to the packman
+	 * @param packman the player packman
+	 * @param fruits list of existing fruits
+	 * @return gps to the closest fruit
+	 */
 	private static Point3D closestFruit(Point3D packman, ArrayList<Point3D> fruits) {
 		MyCoords c=new MyCoords();
 		Iterator<Point3D> i=fruits.iterator();

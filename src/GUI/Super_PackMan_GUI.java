@@ -81,19 +81,19 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 				String row=boardData.get(i);
 				String [] collum=row.split(",");
 				if(collum[0].equalsIgnoreCase("B")) {
-				double x1=Double.parseDouble(collum[3]);
-				double y1=Double.parseDouble(collum[2]);
-				double x2=Double.parseDouble(collum[6]);
-				double y2=Double.parseDouble(collum[5]);
-				Point3D point1=new Point3D(x1,y1,0);
-				Point3D point2=new Point3D(x2,y2,0);
-				int []pix1=map.convC2P(point1);
-				int []pix2=map.convC2P(point2);
-				int widthRec=Math.abs(pix1[0]-pix2[0]);
-				int heightRec=Math.abs(pix1[1]-pix2[1]);
-				g.setColor(Color.black);
-				g.fillRect(pix1[0], pix2[1], widthRec, heightRec);
-			}
+					double x1=Double.parseDouble(collum[3]);
+					double y1=Double.parseDouble(collum[2]);
+					double x2=Double.parseDouble(collum[6]);
+					double y2=Double.parseDouble(collum[5]);
+					Point3D point1=new Point3D(x1,y1,0);
+					Point3D point2=new Point3D(x2,y2,0);
+					int []pix1=map.convC2P(point1);
+					int []pix2=map.convC2P(point2);
+					int widthRec=Math.abs(pix1[0]-pix2[0]);
+					int heightRec=Math.abs(pix1[1]-pix2[1]);
+					g.setColor(Color.black);
+					g.fillRect(pix1[0], pix2[1], widthRec, heightRec);
+				}
 			}
 			for(int i=0;i<boardData.size();i++) {
 				String row=boardData.get(i);
@@ -192,35 +192,40 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 		if(e.getActionCommand().equalsIgnoreCase("Add Player")) {
 			addMe=true;
 		}
-		if(e.getActionCommand().equalsIgnoreCase("Manual")) {//best 35.1
+		if(e.getActionCommand().equalsIgnoreCase("Manual")) {
+			ArrayList<String> data=play.getBoard();
+			if(data.get(0).charAt(0)=='M') {//start only if there is a player
 			play.start();
 			addMe=false;
+			}
 		}
 		if(e.getActionCommand().equalsIgnoreCase("Auto")) {
-			addMe=false;
-			play.start();
 			
-			new Thread()
-			{
-				public void run()
-				{
-					
-					while(play.isRuning()) {
-						double angle=Super_Packman_Algo.recommandedRotation(play.getBoard());
-						play.rotate(angle);
-						repaint();
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						//run();
-					}
-				}
-			}.start();
-		}
+			ArrayList<String> data=play.getBoard();
+			if(data.get(0).charAt(0)=='M') {//start only if there is a player
+				addMe=false;
+				play.start();
 
+				new Thread()
+				{
+					public void run()
+					{
+						while(play.isRuning()) {
+							double angle=Super_Packman_Algo.recommandedRotation(data);
+							play.rotate(angle);
+							repaint();
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							//run();
+						}
+					}
+				}.start();
+			}
+		}
 	}
 
 
