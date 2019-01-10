@@ -4,3 +4,4 @@ if a class is in a different patch then it means it was changed to suit the new 
 1.0.1 finished GUI.
 1.0.2 added algorithm for auto play(not finished(doesn't avoid blocks)).
 1.0.2.1 added minor changes to all super packman classes
+1.0.2.2 algorithm doesnt work but will stop when he cant get to a fruit in a stright line.

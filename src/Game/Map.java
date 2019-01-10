@@ -13,6 +13,7 @@ private int height;
 		this.width=mapImage.getWidth();
 		this.height=mapImage.getHeight();
 	}
+	public Map() {}
 	/**
 	 * converts points in pixels to point3D
 	 * @param pixX x of the pixel(x,y)

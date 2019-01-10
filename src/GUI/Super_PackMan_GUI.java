@@ -17,8 +17,8 @@ import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Coords.MyCoords;
+import Game.Dijkstra;
 import Game.Map;
-import Game.Super_Packman_Algo;
 import Geom.Point3D;
 import Robot.Play;
 
@@ -91,6 +91,8 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 					int []pix2=map.convC2P(point2);
 					int widthRec=Math.abs(pix1[0]-pix2[0]);
 					int heightRec=Math.abs(pix1[1]-pix2[1]);
+					g.setColor(Color.red);
+					g.fillRect(pix1[0]-1, pix2[1]-1, widthRec+2, heightRec+2);
 					g.setColor(Color.black);
 					g.fillRect(pix1[0], pix2[1], widthRec, heightRec);
 				}
@@ -211,7 +213,9 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 					public void run()
 					{
 						while(play.isRuning()) {
-							double angle=Super_Packman_Algo.recommandedRotation(data);
+							ArrayList<String> data=play.getBoard();
+						//	double angle=Super_Packman_Algo.recommandedRotation(data);
+							double angle=Dijkstra.solve(data);
 							play.rotate(angle);
 							repaint();
 							try {
