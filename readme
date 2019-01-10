@@ -10,7 +10,7 @@ in the Game menu you can load an existing game (csv file)
 or add the player packman by clicking "Add Player" and then clicking on the map.
 the start option playes the game:
 manual with the mouse or automatic.
-doesnt eat packmans automaticly because every 1000(1 sec) time is 1 points so finishing the game quicker is better 
+check the wiki for more.
 
 Running the tests
 Test package to test verious elements.
