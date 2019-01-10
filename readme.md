@@ -5,6 +5,8 @@ Prerequisites
 JUnit 5.
 json-simple-1.1.1.jar.
 
+![alt text](https://github.com/aripash/Super-Packman/blob/master/Capture.PNG)
+
 How to play
 in the Game menu you can load an existing game (csv file)
 or add the player packman by clicking "Add Player" and then clicking on the map.
