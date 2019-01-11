@@ -44,7 +44,7 @@ test results:
 9)user: algo:35.9 with 29900 time left.
 
 Version
-1.0.2.2
+1.0.2.3
 
 Authors
 Denis Shapira
