@@ -48,7 +48,7 @@ class DijkstraTest {
 		map.setWidth(image.getWidth());
 		blocks.add(map.convP2C(1, -1, 0));
 		blocks.add(map.convP2C(2, 1, 0));
-		assertTrue(d.blocked(new Point3D(0,0), new Point3D(3,0), blocks));
+		assertTrue(d.blockedP(new Point3D(0,0), new Point3D(3,0), blocks));
 	}
 	@Test
 	void testBlockedP2() {
@@ -63,8 +63,8 @@ class DijkstraTest {
 		Map map=new Map(image);
 		map.setHeight(image.getHeight());
 		map.setWidth(image.getWidth());
-		blocks.add(map.convP2C(3, -1, 0));
-		blocks.add(map.convP2C(4, 1, 0));
-		assertFalse(d.blocked(new Point3D(0,0), new Point3D(3,0), blocks));
+		blocks.add(map.convP2C(4, -1, 0));
+		blocks.add(map.convP2C(5, 1, 0));
+		assertFalse(d.blockedP(new Point3D(0,0), new Point3D(3,0), blocks));
 	}
 }

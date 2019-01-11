@@ -61,6 +61,10 @@ public class Dijkstra {
 
 		//determines the angle to the closest fruit(or block point path to get to the fruit)
 		Point3D closeFruit=closestFruit(packman,fruits,blocks);
+		if(closeFruit==null) {
+			int notWorking=(int)(Math.random()*4);
+			return notWorking*90;
+		}
 		MyCoords c=new MyCoords();
 		double[] AED=c.azimuth_elevation_dist(packman, closeFruit);
 		rotate=AED[0];
@@ -99,7 +103,7 @@ public class Dijkstra {
 		Point3D min=i.next();
 		while(i.hasNext()) {
 			Point3D fi=i.next();
-			if(c.distance3d(packman, fi)<c.distance3d(packman, min))min=fi;
+			if(c.distance3d(packman, fi)<c.distance3d(packman, min)&&!blocked(packman,fi,blocks))min=fi;
 		}
 		if(!blocks.isEmpty()) 
 			if(blocked(packman, min, blocks))
@@ -171,7 +175,8 @@ public class Dijkstra {
 
 
 				//the next point to move to
-				Graph_Algo.dijkstra(G, source);
+				try{Graph_Algo.dijkstra(G, source);}
+				catch(Exception e) {return null;}
 				Node n = G.getNodeByName(target);
 				ArrayList<String> shortestPath = n.getPath();
 				String ans=shortestPath.get(1);
@@ -206,12 +211,23 @@ public class Dijkstra {
 			Point3D lD=new Point3D(pix[0],pix[1]);
 			pix=map.convC2P(blocks.get(i+1));
 			Point3D rU=new Point3D(pix[0],pix[1]);
-			double m=(min.y()-packman.y())/(min.x()-packman.x());
+			double m=Math.abs(min.y()-packman.y())/(min.x()-packman.x());
 			double n=((packman.x()*m*-1)+packman.y());
-			for(double j=packman.x();j<min.x();j+=0.00001) {
+			double left=0;
+			double right=0;
+			if(packman.x()<min.x()) {
+				 left=packman.x();
+				 right=min.x();
+			}
+			else {
+				 right=packman.x();
+				 left=min.x();
+			
+			}
+			for(double j=left;j<right;j+=0.00001) {
 				double Y=j*m+n;
-				if(Y>lD.y()&&Y<rU.y())
-					if(j<rU.x()&&j>lD.x()){
+				if(Y>=lD.y()&&Y<=rU.y())
+					if(j<=rU.x()&&j>=lD.x()){
 					return true;
 				}
 			}
@@ -225,7 +241,18 @@ public class Dijkstra {
 			Point3D rU=new Point3D(blocks.get(i+1));
 			double m=(min.y()-packman.y())/(min.x()-packman.x());
 			double n=(packman.x()*m*-1)+packman.y();
-			for(double j=packman.x();j<min.x();j+=0.0000001) {
+			double left=0;
+			double right=0;
+			if(packman.x()<min.x()) {
+				 left=packman.x();
+				 right=min.x();
+			}
+			else {
+				 right=packman.x();
+				 left=min.x();
+			
+			}
+			for(double j=left;j<right;j+=0.0000001) {
 				double Y=j*m+n;
 				if(Y>lD.y()&&Y<rU.y()) 
 				if(j<rU.x()&&j>lD.x()){
