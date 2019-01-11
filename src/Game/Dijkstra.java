@@ -164,12 +164,14 @@ public class Dijkstra {
 					}
 					else if(!blockedP(allCorners[0], allCorners[i1], blocks))G.addEdge(source, target+"  ", packman.distance2D( allCorners[i1]));
 				}
-				for (int j2 = 1; j2 < allCorners.length-1; j2++) {
-					for (int k = j2+1; k < allCorners.length; k++) {
+				for (int j2 = 0; j2 < allCorners.length-1; j2++) {
+					for (int k = 0; k < allCorners.length; k++) {
+						String Left=""+j2;
+						if(j2==0) Left=source;
 						if(k!=allCorners.length-1) {
-							if(!blockedP(allCorners[j2],allCorners[k],blocks))G.addEdge(""+j2, ""+k, allCorners[j2].distance2D(allCorners[k]));
+							if(!blockedP(allCorners[j2],allCorners[k],blocks))G.addEdge(Left, ""+k, allCorners[j2].distance2D(allCorners[k]));
 						}
-						else if(!blockedP(allCorners[j2],allCorners[k],blocks))G.addEdge(""+j2, target,allCorners[j2].distance2D(allCorners[k]));
+						else if(!blockedP(allCorners[j2],allCorners[k],blocks))G.addEdge(Left, target,allCorners[j2].distance2D(allCorners[k]));
 					}
 				}
 

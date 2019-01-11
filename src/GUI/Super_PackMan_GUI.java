@@ -21,6 +21,7 @@ import Game.Dijkstra;
 import Game.Map;
 import Geom.Point3D;
 import Robot.Play;
+import db.DataBase;
 
 public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionListener{
 	public BufferedImage image;
@@ -28,6 +29,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 	private boolean addMe=false;
 	private boolean started=false;
 	private Play play;
+	private double hashmap;
 
 	public Super_PackMan_GUI() {
 		super("Super Packman");
@@ -118,7 +120,9 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 					g.fillOval(pix[0], pix[1], radius, radius);
 				}
 			}
-			String info=play.getStatistics();
+			String end="";
+			if(!play.isRuning()) end=" the avrg is for this map is "+DataBase.avrg(hashmap);
+			String info=play.getStatistics()+end;
 			g.setColor(Color.BLACK);
 			g.drawString(info, 101, 101);
 			g.setColor(Color.yellow);
@@ -187,6 +191,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 				File file=fc.getSelectedFile();
 				play=new Play(file.getPath());
 				play.setIDs(205356801,314291808,3333);
+				hashmap=play.getHash1();
 				started=true;
 				repaint();
 			}
