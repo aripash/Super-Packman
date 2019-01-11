@@ -1,5 +1,4 @@
 package GUI;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Menu;
@@ -10,18 +9,18 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Coords.MyCoords;
+import Game.Dijkstra;
 import Game.Map;
-import Game.Super_Packman_Algo;
 import Geom.Point3D;
 import Robot.Play;
-import Threads.MyThread;
+import db.DataBase;
+
 
 public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionListener{
 	public BufferedImage image;
@@ -29,13 +28,13 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 	private boolean addMe=false;
 	private boolean started=false;
 	private Play play;
+	private double hashmap;
 	gThread g = null;
 
 	public Super_PackMan_GUI() {
 		super("Super Packman");
 		startimage("Ariel1.png");		
 		this.addMouseListener(this); 
-
 	}
 	/**
 	 * reads the image and builds the menu bar for the game
@@ -48,29 +47,23 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 			e.printStackTrace();
 		}	
 		this.map=new Map(image);
-
 		MenuBar menuBar = new MenuBar();
 		Menu menu1=new Menu("Game");
 		MenuItem item1a = new MenuItem("Load");
 		MenuItem item1b = new MenuItem("Add Player");
-
 		menuBar.add(menu1);
 		menu1.add(item1a);
 		menu1.add(item1b);
-
 		Menu menu2 = new Menu("Start"); 
 		MenuItem item2a = new MenuItem("Manual");
 		MenuItem item2b = new MenuItem("Auto");
-
 		menuBar.add(menu2);
 		menu2.add(item2a);
 		menu2.add(item2b);
-
 		item1a.addActionListener(this);
 		item1b.addActionListener(this);
 		item2a.addActionListener(this);
 		item2b.addActionListener(this);
-
 		this.setMenuBar(menuBar);
 	}
 	public void paint(Graphics g){
@@ -93,6 +86,8 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 					int []pix2=map.convC2P(point2);
 					int widthRec=Math.abs(pix1[0]-pix2[0]);
 					int heightRec=Math.abs(pix1[1]-pix2[1]);
+					g.setColor(Color.red);
+					g.fillRect(pix1[0]-1, pix2[1]-1, widthRec+2, heightRec+2);
 					g.setColor(Color.black);
 					g.fillRect(pix1[0], pix2[1], widthRec, heightRec);
 				}
@@ -118,7 +113,9 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 					g.fillOval(pix[0], pix[1], radius, radius);
 				}
 			}
-			String info=play.getStatistics();
+			String end="";
+			if(!play.isRuning()) end=" the avrg is for this map is "+DataBase.avrg(hashmap);
+			String info=play.getStatistics()+end;
 			g.setColor(Color.BLACK);
 			g.drawString(info, 101, 101);
 			g.setColor(Color.yellow);
@@ -144,14 +141,12 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 				double[] data=c.azimuth_elevation_dist(playerPoint, point);
 				play.rotate(data[0]);
 				repaint();
+			}
 			}		*/
-
 		}
 		catch(Exception e){
-
 		}
 	}
-
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
@@ -161,6 +156,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 	@SuppressWarnings("deprecation")
 	@Override
 	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 		if (g!=null) {
 			g.stop();
 			g=null;
@@ -178,6 +174,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 		mouseX= arg0.getX();
 		mouseY= arg0.getY();
 		g = new gThread();
@@ -188,6 +185,8 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 	@SuppressWarnings("deprecation")
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
 		if (g!=null) {
 			g.stop();
 			g=null;
@@ -207,6 +206,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 				File file=fc.getSelectedFile();
 				play=new Play(file.getPath());
 				play.setIDs(205356801,314291808,3333);
+				hashmap=play.getHash1();
 				started=true;
 				repaint();
 			}
@@ -223,17 +223,19 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 		}
 		if(e.getActionCommand().equalsIgnoreCase("Auto")) {
 
+
 			ArrayList<String> data=play.getBoard();
 			if(data.get(0).charAt(0)=='M') {//start only if there is a player
 				addMe=false;
 				play.start();
-
 				new Thread()
 				{
 					public void run()
 					{
 						while(play.isRuning()) {
-							double angle=Super_Packman_Algo.recommandedRotation(data);
+							ArrayList<String> data=play.getBoard();
+							//	double angle=Super_Packman_Algo.recommandedRotation(data);
+							double angle=Dijkstra.solve(data);
 							play.rotate(angle);
 							repaint();
 							try {
@@ -263,7 +265,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 				double[] data=c.azimuth_elevation_dist(playerPoint, point);
 				play.rotate(data[0]);
 				repaint();
-				
+
 				try {
 					gThread.sleep(100);
 				} catch (InterruptedException e) {
@@ -274,5 +276,4 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 		}
 	};
 }
-
 
