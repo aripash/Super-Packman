@@ -17,11 +17,11 @@ import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Coords.MyCoords;
-import Game.Dijkstra;
 import Game.Map;
+import Game.Super_Packman_Algo;
 import Geom.Point3D;
 import Robot.Play;
-import db.DataBase;
+import Threads.MyThread;
 
 public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionListener{
 	public BufferedImage image;
@@ -29,7 +29,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 	private boolean addMe=false;
 	private boolean started=false;
 	private Play play;
-	private double hashmap;
+	gThread g = null;
 
 	public Super_PackMan_GUI() {
 		super("Super Packman");
@@ -93,8 +93,6 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 					int []pix2=map.convC2P(point2);
 					int widthRec=Math.abs(pix1[0]-pix2[0]);
 					int heightRec=Math.abs(pix1[1]-pix2[1]);
-					g.setColor(Color.red);
-					g.fillRect(pix1[0]-1, pix2[1]-1, widthRec+2, heightRec+2);
 					g.setColor(Color.black);
 					g.fillRect(pix1[0], pix2[1], widthRec, heightRec);
 				}
@@ -120,9 +118,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 					g.fillOval(pix[0], pix[1], radius, radius);
 				}
 			}
-			String end="";
-			if(!play.isRuning()) end=" the avrg is for this map is "+DataBase.avrg(hashmap);
-			String info=play.getStatistics()+end;
+			String info=play.getStatistics();
 			g.setColor(Color.BLACK);
 			g.drawString(info, 101, 101);
 			g.setColor(Color.yellow);
@@ -138,7 +134,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 				play.setInitLocation(point.y(),point.x());
 				repaint();
 			}
-			else {
+			/**			else {
 				ArrayList<String> boardData=play.getBoard();
 				String row=boardData.get(0);
 				String [] collum=row.split(",");
@@ -148,7 +144,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 				double[] data=c.azimuth_elevation_dist(playerPoint, point);
 				play.rotate(data[0]);
 				repaint();
-			}
+			}		*/
 
 		}
 		catch(Exception e){
@@ -162,22 +158,42 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		if (g!=null) {
+			g.stop();
+			g=null;
+			mouseX= -1;
+			mouseY= -1;
+		}
 
+	}
+	int mouseX= -1;
+	int mouseY= -1;
+	public void mouseDragged(MouseEvent e) {
+		mouseX= e.getX();
+		mouseY= e.getY();
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		mouseX= arg0.getX();
+		mouseY= arg0.getY();
+		g = new gThread();
+		g.start();
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
+		if (g!=null) {
+			g.stop();
+			g=null;
+			mouseX= -1;
+			mouseY= -1;
+		}
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -191,7 +207,6 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 				File file=fc.getSelectedFile();
 				play=new Play(file.getPath());
 				play.setIDs(205356801,314291808,3333);
-				hashmap=play.getHash1();
 				started=true;
 				repaint();
 			}
@@ -202,12 +217,12 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 		if(e.getActionCommand().equalsIgnoreCase("Manual")) {
 			ArrayList<String> data=play.getBoard();
 			if(data.get(0).charAt(0)=='M') {//start only if there is a player
-			play.start();
-			addMe=false;
+				play.start();
+				addMe=false;
 			}
 		}
 		if(e.getActionCommand().equalsIgnoreCase("Auto")) {
-			
+
 			ArrayList<String> data=play.getBoard();
 			if(data.get(0).charAt(0)=='M') {//start only if there is a player
 				addMe=false;
@@ -218,9 +233,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 					public void run()
 					{
 						while(play.isRuning()) {
-							ArrayList<String> data=play.getBoard();
-						//	double angle=Super_Packman_Algo.recommandedRotation(data);
-							double angle=Dijkstra.solve(data);
+							double angle=Super_Packman_Algo.recommandedRotation(data);
 							play.rotate(angle);
 							repaint();
 							try {
@@ -236,6 +249,30 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 			}
 		}
 	}
+	public class gThread extends Thread{
 
+		public void run() {
+			ArrayList<String> boardData=play.getBoard();
+			String row=boardData.get(0);
+			String [] collum=row.split(","); 
+			while(true) {
 
+				Point3D playerPoint=new Point3D(Double.parseDouble(collum[3]),Double.parseDouble(collum[2]),Double.parseDouble(collum[4]));
+				Point3D point=map.convP2C(mouseX, mouseY, 0);
+				MyCoords c=new MyCoords();
+				double[] data=c.azimuth_elevation_dist(playerPoint, point);
+				play.rotate(data[0]);
+				repaint();
+				
+				try {
+					gThread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	};
 }
+
+
