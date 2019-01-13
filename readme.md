@@ -1,10 +1,6 @@
 Ex3-4
 this project preforms a packman game.
 
-Prerequisites
-JUnit 5.
-json-simple-1.1.1.jar.
-
 ![alt text](https://github.com/aripash/Super-Packman/blob/master/Capture.PNG)
 
 How to play
