@@ -257,7 +257,7 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 			ArrayList<String> boardData=play.getBoard();
 			String row=boardData.get(0);
 			String [] collum=row.split(","); 
-			while(true) {
+			while(play.isRuning()) {
 
 				Point3D playerPoint=new Point3D(Double.parseDouble(collum[3]),Double.parseDouble(collum[2]),Double.parseDouble(collum[4]));
 				Point3D point=map.convP2C(mouseX, mouseY, 0);

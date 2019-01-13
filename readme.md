@@ -33,15 +33,23 @@ https://gis.stackexchange.com/questions/256779/changing-kml-markers-icons-in-goo
 https://stackoverflow.com/questions/13516829/jfilechooser-change-default-directory-in-windows
 
 test results:
-1)user: algo:50.5 with 36500 time left.
-2)user: algo:73.6 with 66600 time left.
-3)user: algo:03.0 with 00000 time left.
-4)user: algo:71.5 with 68500 time left.
-5)user: algo:43.3 with 70300 time left.
+1)user:48.1 with 36100 time left. algo:50.5 with 36500 time left.
+
+2)user:74.4 with 66400 time left. algo:73.6 with 66600 time left.
+
+3)user:49.9 with 42900 time left. algo:03.0 with 00000 time left.
+
+4)user:77.6 with 74600 time left. algo:71.5 with 68500 time left.
+
+5)user:75.9 with 72900 time left. algo:43.3 with 70300 time left.
+
 6)user:13.0 with 00000 time left. algo:07.0 with 00000 time left.
+
 7)user:42.2 with 37200 time left. algo:42.2 with 37200 time left.
-8)user: algo:07.0 with 00000 time left.
-9)user: algo:35.9 with 29900 time left.
+
+8)user:33.1 with 24100 time left. algo:07.0 with 00000 time left.
+
+9)user:42.3 with 33300 time left. algo:35.9 with 29900 time left.
 
 Version
 1.0.2.3
