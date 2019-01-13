@@ -248,6 +248,8 @@ public class Super_PackMan_GUI extends JFrame implements MouseListener,ActionLis
 						}
 					}
 				}.start();
+				play.rotate(0);
+				repaint();
 			}
 		}
 	}

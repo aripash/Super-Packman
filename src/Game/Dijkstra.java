@@ -131,6 +131,7 @@ public class Dijkstra {
 				}
 				else if(c.distance3d(packman, fi)<c.distance3d(packman, min))min=fi;//take the closest fruit to you 
 			}
+			else if(blocked)if(c.distance3d(packman, fi)<c.distance3d(packman, min))min=fi;
 		}
 
 		if(!blocks.isEmpty()) { //if there are no blocks on the map go to the min fruit
